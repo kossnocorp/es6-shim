@@ -1606,8 +1606,6 @@
       }
     };
 
-    // find an appropriate setImmediate-alike
-    var setTimeout = globals.setTimeout;
     var makeZeroTimeout;
     /*global window */
     if (typeof window !== 'undefined' && ES.IsCallable(window.postMessage)) {
@@ -1647,7 +1645,8 @@
       typeof process === 'object' && process.nextTick ? process.nextTick :
       makePromiseAsap() ||
       (ES.IsCallable(makeZeroTimeout) ? makeZeroTimeout() :
-      function (task) { setTimeout(task, 0); }); // fallback
+      // find an appropriate setImmediate-alike
+      function (task) { globals.setTimeout(task, 0); }); // fallback
 
     var updatePromiseFromPotentialThenable = function (x, capability) {
       if (!ES.TypeIsObject(x)) {
